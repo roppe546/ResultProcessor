@@ -20,5 +20,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="io.vertx:vertx-mongo-client:3.2.1" level="project" />
   </component>
 </module>

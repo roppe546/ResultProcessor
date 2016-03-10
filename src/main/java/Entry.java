@@ -6,25 +6,14 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by robin on 2016-03-10.
  */
 public class Entry {
-    private int id;
     private String entryName;
     private int voteCount;
     private float percentage;
-    private static final AtomicInteger COUNTER = new AtomicInteger();
 
     public Entry(String party, int voteCount, float percentage) {
-        this.id = COUNTER.getAndIncrement();
         this.entryName = party;
         this.voteCount = voteCount;
         this.percentage = percentage;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getEntryName() {
@@ -49,5 +38,13 @@ public class Entry {
 
     public void setPercentage(float percentage) {
         this.percentage = percentage;
+    }
+
+    @Override
+    public String toString() {
+        return "{ entryName='" + entryName + '\'' +
+                ", voteCount=" + voteCount +
+                ", percentage=" + percentage +
+                '}';
     }
 }

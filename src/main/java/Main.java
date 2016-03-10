@@ -1,4 +1,6 @@
+import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonObject;
 
 /**
  * This class starts the verticle responsible for the web service.
