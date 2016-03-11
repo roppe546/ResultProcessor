@@ -1,3 +1,4 @@
+import controller.ResultProcessorVertex;
 import io.vertx.core.Vertx;
 import io.vertx.ext.unit.TestSuite;
 import org.junit.Test;

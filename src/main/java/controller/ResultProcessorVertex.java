@@ -1,3 +1,5 @@
+package controller;
+
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.http.HttpMethod;
@@ -8,8 +10,7 @@ import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
-
-import java.util.List;
+import model.PollResults;
 
 /**
  * This class is handling requests that are to do with retrieving results from a

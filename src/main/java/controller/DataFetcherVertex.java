@@ -1,9 +1,13 @@
+package controller;
+
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClient;
+import model.Entry;
+import model.PollResults;
 
 import java.time.Instant;
 import java.util.ArrayList;
