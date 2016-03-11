@@ -4,7 +4,7 @@ import java.util.ArrayList;
 /**
  * This class holds all the poll data, including the results and some other information.
  *
- * Created by robin on 11/3/16.
+ * Created by robin on 2016-03-11.
  */
 public class PollResults {
     private Instant pollFetchTime;
