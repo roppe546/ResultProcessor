@@ -16,8 +16,6 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
-                    <testSource>1.7</testSource>
-                    <testTarget>1.7</testTarget>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
