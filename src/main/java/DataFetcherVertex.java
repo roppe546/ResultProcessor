@@ -12,7 +12,7 @@ import java.util.List;
  *
  * Created by robin on 2016-03-10.
  */
-public class DataFetcher extends AbstractVerticle {
+public class DataFetcherVertex extends AbstractVerticle {
     private static final int WAIT_TIME = 5000;
 
     private List<Entry> entries = new ArrayList<>();
@@ -43,7 +43,7 @@ public class DataFetcher extends AbstractVerticle {
                 }
             });
 
-            System.out.println("DataFetcher: Current list: " + entries.toString());
+            System.out.println("DataFetcherVertex: Current list: " + entries.toString());
         });
     }
 

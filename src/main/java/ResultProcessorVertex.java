@@ -5,11 +5,9 @@ import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.mongo.MongoClient;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +25,7 @@ public class ResultProcessorVertex extends AbstractVerticle {
 
         // Start fetcher
         DeploymentOptions options = getDeploymentOptions();
-        DataFetcher fetcher = new DataFetcher();
+        DataFetcherVertex fetcher = new DataFetcherVertex();
         vertx.deployVerticle(fetcher, options);
 
         Route results_v1 = router.route("/v1/results").method(HttpMethod.GET);
@@ -47,13 +45,11 @@ public class ResultProcessorVertex extends AbstractVerticle {
 
     private DeploymentOptions getDeploymentOptions() {
         // TODO: Change this to not use localhost
-        DeploymentOptions mongodbOptions = new DeploymentOptions()
+        return new DeploymentOptions()
                 .setConfig(new JsonObject()
                         .put("http.port", 8080)
                         .put("db_name", "evote")
                         .put("connection_string", "mongodb://localhost:" + 27017)
                 );
-
-        return mongodbOptions;
     }
 }
