@@ -1,23 +1,34 @@
 import controller.ResultProcessorVertex;
 import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpClient;
+import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.TestSuite;
+import io.vertx.ext.unit.junit.VertxUnitRunner;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
- * Created by robin on 10/3/16.
+ * This class tests the API.
+ *
+ * Created by robin on 2016-03-10.
  */
+@RunWith(VertxUnitRunner.class)
 public class ResultProcessorVertxTest {
+    private Vertx vertx;
+
+    @Before
+    public void setUp() {
+        vertx = Vertx.vertx();
+        vertx.deployVerticle(new ResultProcessorVertex());
+    }
+
     @Test
-    public void testAPI() {
-        TestSuite suite = TestSuite.create("testSuite");
+    public void getResultData(TestContext context) {
+        HttpClient client = vertx.createHttpClient();
 
-        suite.beforeEach(testContext2 -> {
-            Vertx vertx = Vertx.vertx();
-            vertx.deployVerticle(new ResultProcessorVertex());
-        }).test("Test API", testContext -> {
-            System.out.println("running test...");
-
-            // TODO: Add test here.
+        client.getNow(8080, "localhost", "/results", res -> {
+           context.assertEquals(res.statusCode(), 200);
         });
     }
 }
