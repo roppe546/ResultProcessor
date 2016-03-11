@@ -35,9 +35,8 @@ public class ResultProcessorVertex extends AbstractVerticle {
             HttpServerResponse response = routingContext.response();
             response.putHeader("content-type", "application/json");
 
-            // Get poll data from back end
-            List<Entry> pollData = fetcher.getEntries();
-
+            // Get poll data from back end and return as json
+            PollResults pollData = fetcher.getPollResults();
             response.end(Json.encodePrettily(pollData));
         });
 
