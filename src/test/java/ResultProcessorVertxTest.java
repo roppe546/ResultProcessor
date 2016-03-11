@@ -5,7 +5,7 @@ import org.junit.Test;
 /**
  * Created by robin on 10/3/16.
  */
-public class ResultProcessorVerticleTest {
+public class ResultProcessorVertxTest {
     @Test
     public void testAPI() {
         TestSuite suite = TestSuite.create("testSuite");

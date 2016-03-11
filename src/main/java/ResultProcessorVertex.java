@@ -23,11 +23,12 @@ public class ResultProcessorVertex extends AbstractVerticle {
         HttpServer server = vertx.createHttpServer();
         Router router = Router.router(vertx);
 
-        // Start fetcher
+        // Start fetcher vertex
         DeploymentOptions options = getDeploymentOptions();
         DataFetcherVertex fetcher = new DataFetcherVertex();
         vertx.deployVerticle(fetcher, options);
 
+        // Routes
         Route results_v1 = router.route("/v1/results").method(HttpMethod.GET);
 
         results_v1.handler(routingContext -> {
