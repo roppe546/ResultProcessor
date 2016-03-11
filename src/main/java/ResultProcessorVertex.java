@@ -3,6 +3,7 @@ import io.vertx.core.DeploymentOptions;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.EncodeException;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Route;
@@ -36,8 +37,16 @@ public class ResultProcessorVertex extends AbstractVerticle {
             response.putHeader("content-type", "application/json");
 
             // Get poll data from back end and return as json
-            PollResults pollData = fetcher.getPollResults();
-            response.end(Json.encodePrettily(pollData));
+            try {
+                PollResults pollData = fetcher.getPollResults();
+                response.end(Json.encodePrettily(pollData));
+            }
+            catch (EncodeException | NullPointerException e) {
+                JsonObject error = new JsonObject();
+                // TODO: Maybe remove hard coding
+                error.put("error", "Could not retrieve data. Please try again later.");
+                response.end(Json.encodePrettily(error));
+            }
         });
 
         server.requestHandler(router::accept).listen(8080);
