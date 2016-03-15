@@ -6,6 +6,7 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClient;
 import io.vertx.ext.web.Router;
@@ -27,7 +28,8 @@ public class ResultProcessorVertex extends AbstractVerticle {
 
         // Add routes and handlers
         // GET
-        router.get("/v1/:pollId/results").handler(this::getResults);
+        router.get("/v1/:pollId/").handler(this::getResults);
+        router.get("/v1/:pollId/dump").handler(this::getResultsDump);
 
         // POST
         router.route("/v1/:pollId/").method(HttpMethod.POST).handler(BodyHandler.create());
@@ -37,6 +39,7 @@ public class ResultProcessorVertex extends AbstractVerticle {
     }
 
 
+    // This method returns the poll results without the keys
     private void getResults(RoutingContext routingContext) {
         HttpServerResponse response = routingContext.response();
         response.putHeader("content-type", "application/json");
@@ -45,9 +48,39 @@ public class ResultProcessorVertex extends AbstractVerticle {
         MongoClient mongoClient = MongoClient.createShared(vertx, config());
         JsonObject query = new JsonObject();
 
-        String poll = routingContext.request().getParam("poll");
+        String pollId = routingContext.request().getParam("pollId");
 
-        mongoClient.find(poll, query, res -> {
+        mongoClient.find(pollId, query, res -> {
+            if (res.succeeded()) {
+                try {
+                    // Get 0 as each poll is its own collection, which means there's
+                    // only one results object per collection.
+                    JsonObject json = res.result().get(0);
+                    removeKeys(json);
+                    response.end(Json.encodePrettily(json));
+                }
+                catch (Exception ex) {
+                    JsonObject error = new JsonObject();
+                    error.put("error", "Could not retrieve data. Please try again.");
+                    response.end(Json.encodePrettily(error));
+                }
+            }
+        });
+    }
+
+
+    // This method returns the poll results with the keys
+    private void getResultsDump(RoutingContext routingContext) {
+        HttpServerResponse response = routingContext.response();
+        response.putHeader("content-type", "application/json");
+
+        // Get results from back end
+        MongoClient mongoClient = MongoClient.createShared(vertx, config());
+        JsonObject query = new JsonObject();
+
+        String pollId = routingContext.request().getParam("pollId");
+
+        mongoClient.find(pollId, query, res -> {
             if (res.succeeded()) {
                 try {
                     // Get 0 as each poll is its own collection, which means there's
@@ -88,5 +121,22 @@ public class ResultProcessorVertex extends AbstractVerticle {
                 response.end(Json.encodePrettily(error));
             }
         });
+    }
+
+
+    private JsonObject removeKeys(JsonObject json) {
+        JsonArray questions = json.getJsonArray("questions");
+
+        // For each question
+        for (int i = 0; i < questions.size(); i++) {
+            JsonArray answers = questions.getJsonObject(i).getJsonArray("answers");
+
+            // Remove keysVoted array from each answer for a question
+            for (int j = 0; j < answers.size(); j++) {
+                answers.getJsonObject(j).remove("keysVoted");
+            }
+        }
+
+        return json;
     }
 }
