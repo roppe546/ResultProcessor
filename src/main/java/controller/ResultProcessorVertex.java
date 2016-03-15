@@ -56,6 +56,7 @@ public class ResultProcessorVertex extends AbstractVerticle {
                     // Get 0 as each poll is its own collection, which means there's
                     // only one results object per collection.
                     JsonObject json = res.result().get(0);
+                    json.remove("_id");
                     removeKeys(json);
                     response.end(Json.encodePrettily(json));
                 }
