@@ -16,7 +16,6 @@ public class Main {
     }
 
     private static DeploymentOptions getDeploymentOptions() {
-        // TODO: Change this to not use localhost
         return new DeploymentOptions()
                 .setConfig(new JsonObject()
                         .put("http.port", 8080)

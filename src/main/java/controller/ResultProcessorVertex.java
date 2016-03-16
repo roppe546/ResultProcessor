@@ -44,7 +44,7 @@ public class ResultProcessorVertex extends AbstractVerticle {
         HttpServerResponse response = routingContext.response();
         response.putHeader("content-type", "application/json");
 
-        // Get results from back end
+        // Get results from local database, if master has pushed it here
         MongoClient mongoClient = MongoClient.createShared(vertx, config());
         JsonObject query = new JsonObject();
 
