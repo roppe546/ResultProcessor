@@ -39,7 +39,11 @@ public class ResultProcessorVertex extends AbstractVerticle {
     }
 
 
-    // This method returns the poll results without the keys
+    /**
+     * This method returns the poll results without the keys.
+     *
+     * @param routingContext    contains info about the current context
+     */
     private void getResults(RoutingContext routingContext) {
         HttpServerResponse response = routingContext.response();
         response.putHeader("content-type", "application/json");
@@ -61,6 +65,7 @@ public class ResultProcessorVertex extends AbstractVerticle {
                     response.end(Json.encodePrettily(json));
                 }
                 catch (Exception ex) {
+                    // Return error json in case data is not available
                     JsonObject error = new JsonObject();
                     error.put("error", "Could not retrieve data. Please try again.");
                     response.end(Json.encodePrettily(error));
@@ -70,12 +75,16 @@ public class ResultProcessorVertex extends AbstractVerticle {
     }
 
 
-    // This method returns the poll results with the keys
+    /**
+     * This method returns the poll results with the keys
+     *
+     * @param routingContext    contains info about the current context
+     */
     private void getResultsDump(RoutingContext routingContext) {
         HttpServerResponse response = routingContext.response();
         response.putHeader("content-type", "application/json");
 
-        // Get results from back end
+        // Get results from local database, if master has pushed it here
         MongoClient mongoClient = MongoClient.createShared(vertx, config());
         JsonObject query = new JsonObject();
 
@@ -89,6 +98,7 @@ public class ResultProcessorVertex extends AbstractVerticle {
                     response.end(Json.encodePrettily(res.result().get(0)));
                 }
                 catch (Exception ex) {
+                    // Return error json in case data is not available
                     JsonObject error = new JsonObject();
                     error.put("error", "Could not retrieve data. Please try again.");
                     response.end(Json.encodePrettily(error));
@@ -98,6 +108,12 @@ public class ResultProcessorVertex extends AbstractVerticle {
     }
 
 
+    /**
+     * This method allows master to push results data to the result processors local
+     * database.
+     *
+     * @param routingContext    contains info about the current context
+     */
     private void addResults(RoutingContext routingContext) {
         HttpServerResponse response = routingContext.response();
         response.putHeader("content-type", "application/json");
@@ -117,6 +133,7 @@ public class ResultProcessorVertex extends AbstractVerticle {
                 response.setStatusCode(HttpResponseStatus.OK.code()).end();
             }
             else {
+                // Return error in case data couldn't be written to db
                 JsonObject error = new JsonObject();
                 error.put("error", "Could not add data. Please try again.");
                 response.end(Json.encodePrettily(error));
@@ -125,7 +142,12 @@ public class ResultProcessorVertex extends AbstractVerticle {
     }
 
 
-    private JsonObject removeKeys(JsonObject json) {
+    /**
+     * This method removes the keys from the json in case they are not needed.
+     *
+     * @param json  the json from which to remove the keys
+     */
+    private void removeKeys(JsonObject json) {
         JsonArray questions = json.getJsonArray("questions");
 
         // For each question
@@ -137,7 +159,5 @@ public class ResultProcessorVertex extends AbstractVerticle {
                 answers.getJsonObject(j).remove("keysVoted");
             }
         }
-
-        return json;
     }
 }
