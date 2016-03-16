@@ -5,7 +5,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 
 /**
- * This class starts the verticle responsible for the web service.
+ * This class starts the vertx responsible for the web service.
  *
  * Created by robin on 2016-03-10.
  */
