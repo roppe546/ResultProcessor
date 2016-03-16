@@ -15,6 +15,12 @@ public class Main {
         vertx.deployVerticle(new ResultProcessorVertex(), getDeploymentOptions());
     }
 
+
+    /**
+     * Configure the deployment options to connect to local mongodb.
+     *
+     * @return  the deployment options
+     */
     private static DeploymentOptions getDeploymentOptions() {
         return new DeploymentOptions()
                 .setConfig(new JsonObject()
