@@ -62,13 +62,13 @@ public class ResultProcessorVertex extends AbstractVerticle {
                     JsonObject json = res.result().get(0);
                     json.remove("_id");
                     removeKeys(json);
-                    response.end(Json.encodePrettily(json));
+                    response.setStatusCode(HttpResponseStatus.OK.code()).end(Json.encodePrettily(json));
                 }
                 catch (Exception ex) {
                     // Return error json in case data is not available
                     JsonObject error = new JsonObject();
                     error.put("error", "Could not retrieve data. Please try again.");
-                    response.end(Json.encodePrettily(error));
+                    response.setStatusCode(HttpResponseStatus.OK.code()).end(Json.encodePrettily(error));
                 }
             }
         });
@@ -95,13 +95,13 @@ public class ResultProcessorVertex extends AbstractVerticle {
                 try {
                     // Get 0 as each poll is its own collection, which means there's
                     // only one results object per collection.
-                    response.end(Json.encodePrettily(res.result().get(0)));
+                    response.setStatusCode(HttpResponseStatus.OK.code()).end(Json.encodePrettily(res.result().get(0)));
                 }
                 catch (Exception ex) {
                     // Return error json in case data is not available
                     JsonObject error = new JsonObject();
                     error.put("error", "Could not retrieve data. Please try again.");
-                    response.end(Json.encodePrettily(error));
+                    response.setStatusCode(HttpResponseStatus.OK.code()).end(Json.encodePrettily(error));
                 }
             }
         });
@@ -130,13 +130,13 @@ public class ResultProcessorVertex extends AbstractVerticle {
 
         mongoClient.insert(pollId, addQuery, res -> {
             if (res.succeeded()) {
-                response.setStatusCode(HttpResponseStatus.OK.code()).end();
+                response.setStatusCode(HttpResponseStatus.OK.code()).end(Json.encodePrettily(res.result()));
             }
             else {
                 // Return error in case data couldn't be written to db
                 JsonObject error = new JsonObject();
                 error.put("error", "Could not add data. Please try again.");
-                response.end(Json.encodePrettily(error));
+                response.setStatusCode(HttpResponseStatus.OK.code()).end(Json.encodePrettily(error));
             }
         });
     }

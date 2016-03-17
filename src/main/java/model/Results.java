@@ -9,8 +9,10 @@ import java.util.ArrayList;
  * Created by robin on 2016-03-11.
  */
 public class Results {
+    private String pollId;
     private String owner;
     private String topic;
+    private Instant pollStartTime;
     private Instant pollFinishTime;
     private ArrayList<Question> questions;
 
@@ -18,11 +20,21 @@ public class Results {
     public Results() {
     }
 
-    public Results(String owner, String topic, Instant pollFinishTime, ArrayList<Question> questions) {
+    public Results(String pollId, String owner, String topic, Instant pollStartTime, Instant pollFinishTime, ArrayList<Question> questions) {
+        this.pollId = pollId;
         this.owner = owner;
         this.topic = topic;
+        this.pollStartTime = pollStartTime;
         this.pollFinishTime = pollFinishTime;
         this.questions = questions;
+    }
+
+    public String getPollId() {
+        return pollId;
+    }
+
+    public void setPollId(String pollId) {
+        this.pollId = pollId;
     }
 
     public String getOwner() {
@@ -39,6 +51,15 @@ public class Results {
 
     public void setTopic(String topic) {
         this.topic = topic;
+    }
+
+    // Returns string to use ISO-8601 representation in the JSON
+    public String getPollStartTime() {
+        return pollStartTime.toString();
+    }
+
+    public void setPollStartTime(Instant pollStartTime) {
+        this.pollStartTime = pollStartTime;
     }
 
     // Returns string to use ISO-8601 representation in the JSON
