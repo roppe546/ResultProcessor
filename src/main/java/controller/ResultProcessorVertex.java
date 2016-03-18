@@ -136,7 +136,7 @@ public class ResultProcessorVertex extends AbstractVerticle {
                 // Return error in case data couldn't be written to db
                 JsonObject error = new JsonObject();
                 error.put("error", "Could not add data. Please try again.");
-                response.setStatusCode(HttpResponseStatus.OK.code()).end(Json.encodePrettily(error));
+                response.setStatusCode(HttpResponseStatus.BAD_REQUEST.code()).end(Json.encodePrettily(error));
             }
         });
     }
