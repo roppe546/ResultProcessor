@@ -68,7 +68,7 @@ public class ResultProcessorVertex extends AbstractVerticle {
                     // Return error json in case data is not available
                     JsonObject error = new JsonObject();
                     error.put("error", "Could not retrieve data. Please try again.");
-                    response.setStatusCode(HttpResponseStatus.OK.code()).end(Json.encodePrettily(error));
+                    response.setStatusCode(HttpResponseStatus.NOT_FOUND.code()).end(Json.encodePrettily(error));
                 }
             }
         });
@@ -101,7 +101,7 @@ public class ResultProcessorVertex extends AbstractVerticle {
                     // Return error json in case data is not available
                     JsonObject error = new JsonObject();
                     error.put("error", "Could not retrieve data. Please try again.");
-                    response.setStatusCode(HttpResponseStatus.OK.code()).end(Json.encodePrettily(error));
+                    response.setStatusCode(HttpResponseStatus.NOT_FOUND.code()).end(Json.encodePrettily(error));
                 }
             }
         });
