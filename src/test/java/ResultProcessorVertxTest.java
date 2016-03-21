@@ -65,7 +65,7 @@ public class ResultProcessorVertxTest {
         HttpClient client = vertx.createHttpClient();
 
         client.getNow(8080, "localhost", "/v1/nonexistantpoll/", res -> {
-            context.assertEquals(res.statusCode(), 200);
+            context.assertEquals(res.statusCode(), 404);
 
             res.bodyHandler(body -> {
                 JsonObject json = body.toJsonObject();
