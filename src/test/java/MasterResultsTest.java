@@ -55,7 +55,7 @@ public class MasterResultsTest {
 
     /**
      * Before executing our test, let's deploy our verticle.
-     * <p/>
+     * <p>
      * This method instantiates a new Vertx and deploy the verticle. Then, it waits in the verticle has successfully
      * completed its start sequence (thanks to `context.asyncAssertSuccess`).
      *
@@ -72,9 +72,9 @@ public class MasterResultsTest {
 
         DeploymentOptions options = new DeploymentOptions()
                 .setConfig(new JsonObject()
-                        .put("http.port", 8080)
-                        .put("db_name", "evote")
-                        .put("connection_string", "mongodb://localhost:" + MONGO_PORT)
+                                .put("http.port", 8080)
+                                .put("db_name", "evote")
+                                .put("connection_string", "mongodb://localhost:" + MONGO_PORT)
                 );
 
         // We pass the options as the second parameter of the deployVerticle method.
@@ -98,8 +98,9 @@ public class MasterResultsTest {
 
         Results results = createResults();
 
-        final String json = Json.encodePrettily(results);
-        vertx.createHttpClient().post(8080, "localhost", "/v1/" + results.getPollId() + "/")
+        final String json = new JsonObject().put("voting", new JsonObject(Json.encode(results))).encode();
+
+        vertx.createHttpClient().post(7670, "localhost", "/api/results/")
                 .putHeader("content-type", "application/json")
                 .putHeader("content-length", Integer.toString(json.length()))
                 .handler(response -> {

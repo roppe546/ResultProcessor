@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Created by robin on 2016-03-11.
  */
 public class Results {
-    private String pollId;
+    private String id;
     private String owner;
     private String topic;
     private Instant pollStartTime;
@@ -20,8 +20,8 @@ public class Results {
     public Results() {
     }
 
-    public Results(String pollId, String owner, String topic, Instant pollStartTime, Instant pollFinishTime, ArrayList<Question> questions) {
-        this.pollId = pollId;
+    public Results(String id, String owner, String topic, Instant pollStartTime, Instant pollFinishTime, ArrayList<Question> questions) {
+        this.id = id;
         this.owner = owner;
         this.topic = topic;
         this.pollStartTime = pollStartTime;
@@ -29,12 +29,12 @@ public class Results {
         this.questions = questions;
     }
 
-    public String getPollId() {
-        return pollId;
+    public String getId() {
+        return id;
     }
 
-    public void setPollId(String pollId) {
-        this.pollId = pollId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getOwner() {
