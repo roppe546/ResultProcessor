@@ -1,0 +1,107 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+
+
+<link rel="import" href="../elements/vote-viewer.html">
+
+<!--
+    @author Robin Duda
+    Polymer element for a simple admin-panel using iron-pages.
+ -->
+
+
+<dom-module id="user-panel">
+    <link rel="import" href="../style/melon.css" type="css">
+    <link rel="import" href="../style/style.css" type="css">
+    <template>
+        <style>
+            :host {
+                display: inline-block;
+            }
+
+            .container {
+                margin-top: 64px;
+                width: 675px;
+            }
+
+            .spacer {
+                height: 235px;
+            }
+
+            .id {
+                display: block;
+                width: 100%;
+                text-align: right;
+            }
+
+            .topic {
+                text-align: center;
+            }
+
+            paper-toast {
+                position: absolute;
+                right: 0px;
+                bottom: -80px;
+            }
+        </style>
+
+
+        <div class="container">
+
+            <paper-material elevation="3">
+
+                <paper-tabs selected="{{page}}" no-slide>
+                    <paper-tab><span class="topic">{{topic}}</span> <h6 class="id">{{id}}</h6></paper-tab>
+                </paper-tabs>
+
+                <iron-pages selected="{{page}}">
+                    <div>
+                        <paper-material elevation="0">
+                            <vote-viewer>
+                            </vote-viewer>
+                            <paper-toast class="toast-error" id="view-missing"
+                                         text="There are no results for specified voting.."></paper-toast>
+                        </paper-material>
+                    </div>
+                </iron-pages>
+
+            </paper-material>
+
+
+            <div class="spacer"></div>
+        </div>
+
+    </template>
+    <script>
+        Polymer({
+            is: 'user-panel',
+            ready: function () {
+                this.page = 0;
+                var self = this;
+
+                application.subscribe("vote-select", function (event) {
+                    self.id = event.id;
+                    self.topic = "Loading..";
+
+                    $.ajax({
+                        type: "GET",
+                        url: "/api/view/" + application.id,
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+                            console.log(data);
+                            application.publish('vote-loaded', JSON.parse(data));
+                        },
+                        error: function () {
+                            application.publish('close-event');
+                            self.$['view-missing'].open();
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+</dom-module>
